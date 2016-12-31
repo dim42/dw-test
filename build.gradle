@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'eclipse'
+//    id "org.akhikhl.gretty" version "1.4.0"
+    id 'application'
+    id 'war'
+}
+
+task "createSrcDirs" doLast {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+task wrapper(type: Wrapper) {
+//        gradleVersion = '3.2.1'
+    gradleVersion = '3.3-rc-1'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+mainClassName = "DWApplication"
+
+dependencies {
+    compile 'io.dropwizard:dropwizard-core:1.0.5'
+}
