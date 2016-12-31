@@ -19,6 +19,7 @@ nbproject
 # Always ignore these directories/files
 target
 bin
+build
 out
 
 # Mobile Tools for Java (J2ME)
