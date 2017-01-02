@@ -14,6 +14,7 @@ import static pack1.dw.DWResource.PATH
 
 class DWResourceTest extends Specification {
     void setup() {
+        println "Server should be started"
     }
 
     void cleanup() {
@@ -21,7 +22,7 @@ class DWResourceTest extends Specification {
 
     def "SayHello"() {
         def url = PATH + "?" + NAME + "=Name1"
-        print(url)
+        println(url)
 
         expect:
         a == b
@@ -41,5 +42,6 @@ class DWResourceTest extends Specification {
         expect:
         println(response)
         response.status | 200
+        response.readEntity(DWRepresentation.class).getContent() == "Hello, Name1!"
     }
 }
