@@ -27,4 +27,6 @@ mainClassName = "pack1.dw.DWApplication"
 
 dependencies {
     compile 'io.dropwizard:dropwizard-core:1.0.5'
+
+    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
 }
