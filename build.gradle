@@ -23,7 +23,7 @@ repositories {
     mavenCentral()
 }
 
-mainClassName = "DWApplication"
+mainClassName = "pack1.dw.DWApplication"
 
 dependencies {
     compile 'io.dropwizard:dropwizard-core:1.0.5'
