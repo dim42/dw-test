@@ -1,7 +1,9 @@
 # dw-test
-dropwizard test
+[![Build Status](https://travis-ci.org/dim42/dw-test.svg?branch=master)](https://travis-ci.org/dim42/dw-test)
 
-Build: gradlew build
+Simple dropwizard test
+
+Build: gradlew assemble
 
 Run with args: server dw.yml
 
