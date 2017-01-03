@@ -3,6 +3,9 @@ package pack.db;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import javax.persistence.Entity;
@@ -28,7 +31,17 @@ public class Account {
 
     public static void main(String[] args) {
 //        Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:");
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        SessionFactory sessionFactory;
+        StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure() // configures settings from hibernate.cfg.xml
+                .build();
+        try {
+            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        } catch (Exception e) {
+            // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory so destroy it manually.
+            StandardServiceRegistryBuilder.destroy(registry);
+            sessionFactory = new Configuration().configure().buildSessionFactory();
+        }
         Session session = sessionFactory.openSession();
         Account account = new Account(42L, "1234");
         Serializable generatedIdentifier = session.save(account);
