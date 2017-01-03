@@ -35,13 +35,22 @@ class DWResourceTest extends Specification {
     def "test get"() {
         Client client = ClientBuilder.newClient(new ClientConfig().register(JacksonFeatures.class))
         String uri = format("http://%s:%s/", "localhost", 8080)
-        def path = PATH
 
-        def response = client.target(uri).path(path).queryParam(NAME, "Name1").request(APPLICATION_JSON).get()
+        def response = client.target(uri).path(PATH).queryParam(NAME, "Name1").request(APPLICATION_JSON).get()
 
         expect:
         println(response)
         response.status | 200
         response.readEntity(DWRepresentation.class).getContent() == "Hello, Name1!"
+    }
+
+    def "test empty name"() {
+        Client client = ClientBuilder.newClient(new ClientConfig().register(JacksonFeatures.class))
+        String uri = format("http://%s:%s/", "localhost", 8080)
+
+        def response = client.target(uri).path(PATH).queryParam(NAME, "").request(APPLICATION_JSON).get()
+
+        expect:
+        response.readEntity(DWRepresentation.class).getContent() == "Hello, Unknown!"
     }
 }
