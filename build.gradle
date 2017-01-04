@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'eclipse'
+    id 'groovy'
 //    id "org.akhikhl.gretty" version "1.4.0"
     id 'application'
     id 'war'
@@ -10,6 +11,7 @@ plugins {
 task "createSrcDirs" doLast {
     sourceSets*.java.srcDirs*.each { it.mkdirs() }
     sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+    sourceSets*.groovy.srcDirs*.each { it.mkdirs() }
 }
 
 task wrapper(type: Wrapper) {
@@ -17,7 +19,9 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.3-rc-1'
 }
 
-sourceCompatibility = 1.8
+def langLevel = 1.8
+sourceCompatibility = langLevel
+targetCompatibility = langLevel
 
 repositories {
     mavenCentral()
@@ -30,5 +34,8 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.2.6.Final'
     compile 'org.xerial:sqlite-jdbc:3.15.1'
 
-    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+    testCompile(
+            'org.spockframework:spock-core:1.0-groovy-2.4',
+            'io.dropwizard:dropwizard-testing:1.0.5'
+    )
 }

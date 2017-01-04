@@ -2,6 +2,7 @@ package pack1.dw
 
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures
 import org.glassfish.jersey.client.ClientConfig
+import org.junit.BeforeClass
 import spock.lang.Specification
 
 import javax.ws.rs.client.Client
@@ -13,6 +14,12 @@ import static pack1.dw.DWResource.NAME
 import static pack1.dw.DWResource.PATH
 
 class DWResourceTest extends Specification {
+
+    @BeforeClass
+    static void before() {
+        new DWApplication().run("server", "dw.yml")
+    }
+
     void setup() {
         println "Server should be started"
     }
