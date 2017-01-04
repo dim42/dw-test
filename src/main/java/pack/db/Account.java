@@ -22,6 +22,7 @@ import static pack.db.Account.ACCOUNT_TABLE_NAME;
 public class Account {
     static final String ACCOUNT_ENTITY_NAME = "AccountEntity";
     static final String ACCOUNT_TABLE_NAME = "accounts";
+    private static final int NORMAL_TERMINATION = 0;
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -30,7 +31,6 @@ public class Account {
     private String number;
 
     public static void main(String[] args) {
-//        Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:");
         SessionFactory sessionFactory;
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure() // configures settings from hibernate.cfg.xml
@@ -46,6 +46,7 @@ public class Account {
         Account account = new Account(42L, "1234");
         Serializable generatedIdentifier = session.save(account);
         System.out.println(generatedIdentifier);
+        System.exit(NORMAL_TERMINATION);
     }
 
     public Account() {

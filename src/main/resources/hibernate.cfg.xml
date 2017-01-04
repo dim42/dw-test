@@ -5,7 +5,8 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:sqlite3_dw.db</property>
+        <!--<property name="hibernate.connection.url">jdbc:sqlite:sqlite3_dw.db</property>-->
+        <property name="hibernate.connection.url">jdbc:sqlite::memory:</property>
         <property name="hibernate.connection.autocommit">true</property>
         <property name="show_sql">true</property>
         <property name="dialect">pack.db.SQLiteDialect</property>
