@@ -23,9 +23,9 @@ public class DWApplication extends Application<DWConfiguration> {
     @Override
     public void run(DWConfiguration configuration, Environment environment) {
         String template = configuration.getTemplate();
-        DWResource resource = new DWResource(template, configuration.getDefaultName());
         HealthCheck healthCheck = new DWHealthCheck(template);
         environment.healthChecks().register("template", healthCheck);
+        DWResource resource = new DWResource(template, configuration.getDefaultName());
         environment.jersey().register(resource);
     }
 }
