@@ -1,17 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD//EN"
-        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
-        <!--<property name="hibernate.connection.url">jdbc:sqlite:sqlite3_dw.db</property>-->
-        <property name="hibernate.connection.url">jdbc:sqlite::memory:</property>
+        <property name="hibernate.connection.url">jdbc:sqlite:sqlite3_dw.db</property>
+        <!--<property name="hibernate.connection.url">jdbc:sqlite::memory:</property>-->
         <property name="hibernate.connection.autocommit">true</property>
         <property name="show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
         <property name="dialect">pack.db.SQLiteDialect</property>
         <!--Enables automatic generation of database schemas directly into the database-->
         <property name="hibernate.hbm2ddl.auto">update</property>
+        <!--<property name="hibernate.hbm2ddl.auto">create-drop</property>-->
+        <!--<property name="hibernate.hbm2ddl.auto">create</property>-->
+        <!--<property name="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</property>-->
+        <!--<property name="hibernate.cache.use_query_cache">true</property>-->
+        <property name="hibernate.generate_statistics">true</property>
+        <property name="hibernate.cache.use_structured_entries">true</property>
 
         <mapping class="pack.db.Account"/>
     </session-factory>

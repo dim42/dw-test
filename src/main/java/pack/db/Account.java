@@ -8,17 +8,19 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 
 import static pack.db.Account.ACCOUNT_ENTITY_NAME;
 import static pack.db.Account.ACCOUNT_TABLE_NAME;
 
 @Entity(name = ACCOUNT_ENTITY_NAME)
-@Table(name = ACCOUNT_TABLE_NAME)
+@Table(name = ACCOUNT_TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = {"number"}))
 public class Account {
     static final String ACCOUNT_ENTITY_NAME = "AccountEntity";
     static final String ACCOUNT_TABLE_NAME = "accounts";
@@ -28,6 +30,7 @@ public class Account {
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
+    @Column(name = "number", nullable = false)
     private String number;
 
     public static void main(String[] args) {
@@ -43,7 +46,7 @@ public class Account {
             sessionFactory = new Configuration().configure().buildSessionFactory();
         }
         Session session = sessionFactory.openSession();
-        Account account = new Account(42L, "1234");
+        Account account = new Account("1234");
         Serializable generatedIdentifier = session.save(account);
         System.out.println(generatedIdentifier);
         System.exit(NORMAL_TERMINATION);
@@ -53,8 +56,7 @@ public class Account {
         // is used by Hibernate
     }
 
-    public Account(Long id, String number) {
-        this.id = id;
+    public Account(String number) {
         this.number = number;
     }
 

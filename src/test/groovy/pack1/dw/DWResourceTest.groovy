@@ -5,8 +5,9 @@ import io.dropwizard.testing.junit.DropwizardAppRule
 import org.junit.ClassRule
 import spock.lang.Specification
 
-import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
+import javax.ws.rs.client.Entity
+import javax.ws.rs.client.WebTarget
 
 import static java.lang.String.format
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -23,25 +24,45 @@ class DWResourceTest extends Specification {
         RULE.application.run()
     }
 
-    private Client client
+    private WebTarget target
 
     def setup() {
-        client = ClientBuilder.newClient()
+        target = ClientBuilder.newClient().target(URI).path(PATH)
     }
 
-    def "test get"() {
-        def response = client.target(URI).path(PATH).queryParam(NAME, "Name1").request(APPLICATION_JSON).get()
+    def "test post get"() {
+        def account = 1111
+        (0..2).each { int it ->
+            account += it
 
+            when:
+            def entity = Entity.entity("{\"number\":\"" + account + "\"}", APPLICATION_JSON)
+            def response = target.request(APPLICATION_JSON).post(entity)
+
+            then:
+            println(response)
+            response.status | 200
+
+            when:
+            def name = response.readEntity(DWRepresentation.class).content
+            response = target.queryParam(NAME, name).request(APPLICATION_JSON).get()
+
+            then:
+            println(response)
+            response.status | 200
+            response.readEntity(DWRepresentation.class).content == "Account: " + account + "!"
+        }
         expect:
-        println(response)
-        response.status | 200
-        response.readEntity(DWRepresentation.class).getContent() == "Hello, Name1!"
+        1 == 1
     }
 
     def "test empty name"() {
-        def response = client.target(URI).path(PATH).queryParam(NAME, "").request(APPLICATION_JSON).get()
+        def entity = Entity.entity("{\"number\":\"Unknown\"}", APPLICATION_JSON)
+        target.request(APPLICATION_JSON).post(entity)
+
+        def response = target.queryParam(NAME, "").request(APPLICATION_JSON).get()
 
         expect:
-        response.readEntity(DWRepresentation.class).getContent() == "Hello, Unknown!"
+        response.readEntity(DWRepresentation.class).content == "Account: Unknown!"
     }
 }
