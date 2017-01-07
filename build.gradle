@@ -28,6 +28,9 @@ repositories {
 }
 
 mainClassName = "pack1.dw.DWApplication"
+run {
+    args 'server', 'dw.yml'
+}
 
 dependencies {
     compile('io.dropwizard:dropwizard-core:1.0.5',
