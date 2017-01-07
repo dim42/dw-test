@@ -41,7 +41,7 @@ public class DWResource {
             AccountDto account = dao.newAccount(dto.getNumber());
             return new DWRepresentation(counter.incrementAndGet(), OK, account.getNumber());
         } catch (Exception e) {
-            return new DWRepresentation(counter.incrementAndGet(), FAIL);
+            return new DWRepresentation(counter.incrementAndGet(), FAIL, e.getMessage());
         }
     }
 
@@ -53,7 +53,7 @@ public class DWResource {
             Account account = dao.getAccount(notEmptyName);
             return new DWRepresentation(counter.incrementAndGet(), OK, format(template, account.getNumber()));
         } catch (Exception e) {
-            return new DWRepresentation(counter.incrementAndGet(), FAIL);
+            return new DWRepresentation(counter.incrementAndGet(), FAIL, e.getMessage());
         }
     }
 }

@@ -14,11 +14,6 @@ public class DWRepresentation {
         // Jackson deserialization
     }
 
-    public DWRepresentation(long id, ResultCode status) {
-        this.id = id;
-        this.status = status;
-    }
-
     public DWRepresentation(long id, ResultCode status, String content) {
         this.id = id;
         this.status = status;

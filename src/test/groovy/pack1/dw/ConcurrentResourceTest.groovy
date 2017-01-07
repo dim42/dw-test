@@ -14,7 +14,7 @@ import static pack1.dw.CommonSpec.beforeRun
 
 class ConcurrentResourceTest extends Specification {
     private static final Logger log = LoggerFactory.getLogger(ConcurrentResourceTest.class)
-    private static final int COUNTS = 100
+    private static final int COUNTS = 25
 
     def setupSpec() {
         beforeRun()
@@ -32,7 +32,9 @@ class ConcurrentResourceTest extends Specification {
 
     def "concurrent post get"() {
         def account = 2222
-        (0..2).each { int it ->
+        given:
+        "Account: " + account
+        (0..10).each { int it ->
             account += it
             ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.runtime.availableProcessors() + 1)
             final AtomicBoolean success = new AtomicBoolean(true)
@@ -66,7 +68,5 @@ class ConcurrentResourceTest extends Specification {
                 log.info("CompletedWithErrors")
             }
         }
-        expect:
-        "To enable test method"
     }
 }

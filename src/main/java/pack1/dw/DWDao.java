@@ -45,29 +45,29 @@ public class DWDao {
     }
 
     public AccountDto newAccount(String number) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-//        for sqlite Hibernate adds constraint unique with error, so it's needed to check for uniqueness manually
-        Optional<Account> accountOpt = getUniqueAccountOptional(session, number);
-        if (accountOpt.isPresent()) {
-            Account account = accountOpt.get();
-            return new AccountDto(account.getId(), account.getNumber());
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            // for sqlite Hibernate adds constraint unique with error, so it's needed to check for uniqueness manually
+            Optional<Account> accountOpt = getUniqueAccountOptional(session, number);
+            if (accountOpt.isPresent()) {
+                Account account = accountOpt.get();
+                return new AccountDto(account.getId(), account.getNumber());
+            }
+            Account account = new Account(number);
+            Serializable generatedIdentifier = session.save(account);
+            session.getTransaction().commit();
+            log.info("generatedIdentifier: {}", generatedIdentifier);
+            return new AccountDto(generatedIdentifier, account.getNumber());
         }
-        Account account = new Account(number);
-        Serializable generatedIdentifier = session.save(account);
-        session.getTransaction().commit();
-        session.close();
-        log.info("generatedIdentifier: {}", generatedIdentifier);
-        return new AccountDto(generatedIdentifier, account.getNumber());
     }
 
     public Account getAccount(String name) {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        Account account = getUniqueAccountOptional(session, name).orElseThrow(() -> new NoSuchElementException(format("Account %s is not found", name)));
-        session.getTransaction().commit();
-        session.close();
-        return account;
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            Account account = getUniqueAccountOptional(session, name).orElseThrow(() -> new NoSuchElementException(format("Account %s is not found", name)));
+            session.getTransaction().commit();
+            return account;
+        }
     }
 
     private Optional<Account> getUniqueAccountOptional(Session session, String name) {
