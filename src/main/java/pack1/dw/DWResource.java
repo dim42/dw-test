@@ -13,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.String.format;
+import static pack1.dw.ResultCode.FAIL;
+import static pack1.dw.ResultCode.OK;
 
 @Path(DWResource.PATH)
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,9 +39,9 @@ public class DWResource {
     public DWRepresentation processPost(PostDto dto) {
         try {
             AccountDto account = dao.newAccount(dto.getNumber());
-            return new DWRepresentation(counter.incrementAndGet(), "OK", account.getNumber());
+            return new DWRepresentation(counter.incrementAndGet(), OK, account.getNumber());
         } catch (Exception e) {
-            return new DWRepresentation(counter.incrementAndGet(), "FAIL");
+            return new DWRepresentation(counter.incrementAndGet(), FAIL);
         }
     }
 
@@ -49,9 +51,9 @@ public class DWResource {
         try {
             String notEmptyName = name.get().orElse(defaultName);
             Account account = dao.getAccount(notEmptyName);
-            return new DWRepresentation(counter.incrementAndGet(), "OK", format(template, account.getNumber()));
+            return new DWRepresentation(counter.incrementAndGet(), OK, format(template, account.getNumber()));
         } catch (Exception e) {
-            return new DWRepresentation(counter.incrementAndGet(), "FAIL");
+            return new DWRepresentation(counter.incrementAndGet(), FAIL);
         }
     }
 }

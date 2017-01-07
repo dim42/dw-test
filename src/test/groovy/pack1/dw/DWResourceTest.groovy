@@ -13,6 +13,7 @@ import static java.lang.String.format
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON
 import static pack1.dw.DWResource.NAME
 import static pack1.dw.DWResource.PATH
+import static pack1.dw.ResultCode.OK
 
 class DWResourceTest extends Specification {
     @ClassRule
@@ -41,10 +42,11 @@ class DWResourceTest extends Specification {
 
             then:
             println(response)
-            response.status | 200
+            def representation = response.readEntity(DWRepresentation.class)
+            representation.status == OK
 
             when:
-            def name = response.readEntity(DWRepresentation.class).content
+            def name = representation.content
             response = target.queryParam(NAME, name).request(APPLICATION_JSON).get()
 
             then:
@@ -57,12 +59,19 @@ class DWResourceTest extends Specification {
     }
 
     def "test empty name"() {
+        when:
         def entity = Entity.entity("{\"number\":\"Unknown\"}", APPLICATION_JSON)
-        target.request(APPLICATION_JSON).post(entity)
+        def response = target.request(APPLICATION_JSON).post(entity)
 
-        def response = target.queryParam(NAME, "").request(APPLICATION_JSON).get()
+        then:
+        response.status | 200
+        response.readEntity(DWRepresentation.class).status == OK
 
-        expect:
+        when:
+        response = target.queryParam(NAME, "").request(APPLICATION_JSON).get()
+
+        then:
+        response.status | 200
         response.readEntity(DWRepresentation.class).content == "Account: Unknown!"
     }
 }

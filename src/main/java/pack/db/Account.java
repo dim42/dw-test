@@ -1,56 +1,28 @@
 package pack.db;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import java.io.Serializable;
 
 import static pack.db.Account.ACCOUNT_ENTITY_NAME;
 import static pack.db.Account.ACCOUNT_TABLE_NAME;
 
 @Entity(name = ACCOUNT_ENTITY_NAME)
-@Table(name = ACCOUNT_TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = {"number"}))
+@Table(name = ACCOUNT_TABLE_NAME)
 public class Account {
     static final String ACCOUNT_ENTITY_NAME = "AccountEntity";
     static final String ACCOUNT_TABLE_NAME = "accounts";
-    private static final int NORMAL_TERMINATION = 0;
 
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
-    @Column(name = "number", nullable = false)
+    @Column(nullable = false, unique = true)
     private String number;
-
-    public static void main(String[] args) {
-        SessionFactory sessionFactory;
-        StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure() // configures settings from hibernate.cfg.xml
-                .build();
-        try {
-            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        } catch (Exception e) {
-            // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory so destroy it manually.
-            StandardServiceRegistryBuilder.destroy(registry);
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        }
-        Session session = sessionFactory.openSession();
-        Account account = new Account("1234");
-        Serializable generatedIdentifier = session.save(account);
-        System.out.println(generatedIdentifier);
-        System.exit(NORMAL_TERMINATION);
-    }
 
     public Account() {
         // is used by Hibernate

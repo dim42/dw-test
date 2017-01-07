@@ -6,20 +6,20 @@ import org.hibernate.validator.constraints.Length;
 public class DWRepresentation {
     private long id;
 
+    private ResultCode status;
     @Length(max = 3)
-    private String status;
     private String content;
 
     public DWRepresentation() {
         // Jackson deserialization
     }
 
-    public DWRepresentation(long id, String status) {
+    public DWRepresentation(long id, ResultCode status) {
         this.id = id;
         this.status = status;
     }
 
-    public DWRepresentation(long id, String status, String content) {
+    public DWRepresentation(long id, ResultCode status, String content) {
         this.id = id;
         this.status = status;
         this.content = content;
@@ -30,8 +30,8 @@ public class DWRepresentation {
         return id;
     }
 
-    @JsonProperty
-    public String getStatus() {
+    @JsonProperty("status")
+    public ResultCode getStatus() {
         return status;
     }
 
