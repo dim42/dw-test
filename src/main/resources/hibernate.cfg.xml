@@ -14,6 +14,7 @@
         <!--Enables automatic generation of database schemas directly into the database-->
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider</property>
+        <property name="c3p0.maxPoolSize">305</property>
         <!--<property name="hibernate.hbm2ddl.auto">create-drop</property>-->
         <!--<property name="hibernate.hbm2ddl.auto">create</property>-->
         <!--<property name="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</property>-->

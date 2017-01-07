@@ -1,77 +1,55 @@
 package pack1.dw
 
-import io.dropwizard.testing.ResourceHelpers
-import io.dropwizard.testing.junit.DropwizardAppRule
-import org.junit.ClassRule
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import spock.lang.Specification
 
-import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.client.Entity
-import javax.ws.rs.client.WebTarget
 
-import static java.lang.String.format
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON
+import static pack1.dw.CommonSpec.after
+import static pack1.dw.CommonSpec.beforeRun
 import static pack1.dw.DWResource.NAME
-import static pack1.dw.DWResource.PATH
 import static pack1.dw.ResultCode.OK
 
 class DWResourceTest extends Specification {
-    @ClassRule
-    private static final DropwizardAppRule<DWConfiguration> RULE = new DropwizardAppRule<>(DWApplication.class, ResourceHelpers.resourceFilePath("dw.yml"))
-    private static final String URI = format("http://%s:%s/", "localhost", 8080)
+    private static final Logger log = LoggerFactory.getLogger(DWResourceTest.class)
 
     def setupSpec() {
-        RULE.testSupport.before()
-        RULE.application.run()
+        beforeRun()
     }
 
-    private WebTarget target
+    def cleanupSpec() {
+        after()
+    }
+
+    def common = new CommonSpec()
 
     def setup() {
-        target = ClientBuilder.newClient().target(URI).path(PATH)
+        common.createTarget()
     }
 
     def "test post get"() {
-        def account = 1111
-        (0..2).each { int it ->
-            account += it
-
-            when:
-            def entity = Entity.entity("{\"number\":\"" + account + "\"}", APPLICATION_JSON)
-            def response = target.request(APPLICATION_JSON).post(entity)
-
-            then:
-            println(response)
-            def representation = response.readEntity(DWRepresentation.class)
-            representation.status == OK
-
-            when:
-            def name = representation.content
-            response = target.queryParam(NAME, name).request(APPLICATION_JSON).get()
-
-            then:
-            println(response)
-            response.status | 200
-            response.readEntity(DWRepresentation.class).content == "Account: " + account + "!"
-        }
+        common.post_get(1111)
         expect:
-        1 == 1
+        "To enable test method"
     }
 
-    def "test empty name"() {
+    private "test empty name"() {
+        def defaultName = "Unknown"
         when:
-        def entity = Entity.entity("{\"number\":\"Unknown\"}", APPLICATION_JSON)
-        def response = target.request(APPLICATION_JSON).post(entity)
+        def entity = Entity.entity("{\"number\":\"$defaultName\"}".toString(), APPLICATION_JSON)
+        def response = common.target.request(APPLICATION_JSON).post(entity)
 
         then:
         response.status | 200
         response.readEntity(DWRepresentation.class).status == OK
 
         when:
-        response = target.queryParam(NAME, "").request(APPLICATION_JSON).get()
+        response = common.target.queryParam(NAME, "").request(APPLICATION_JSON).get()
 
         then:
         response.status | 200
-        response.readEntity(DWRepresentation.class).content == "Account: Unknown!"
+        response.readEntity(DWRepresentation.class).content == "Account: $defaultName!".toString()
     }
 }
