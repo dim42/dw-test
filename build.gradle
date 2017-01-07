@@ -15,8 +15,7 @@ task "createSrcDirs" doLast {
 }
 
 task wrapper(type: Wrapper) {
-//        gradleVersion = '3.2.1'
-    gradleVersion = '3.3-rc-1'
+    gradleVersion = '3.3'
 }
 
 def langLevel = 1.8
