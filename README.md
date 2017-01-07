@@ -3,6 +3,8 @@
 
 Simple dropwizard test
 
+Technologies: Dropwizard 1.0.5 , SQLite (Embedded), Hibernate 5.2.6, Spock, Gradle 3.
+
 Build: gradlew assemble
 
 Run with args: server dw.yml
